@@ -99,7 +99,19 @@ public class DAONave
 	public void insBack (nave N) 
 	{
 		int codP = N.getCodP();
-		int codNave = N.getCodNave();
+		int codNave;
+		
+		if(N instanceof Destructor)
+		{
+			codNave=1;
+		}
+		else if (N instanceof Submarino)
+		{
+			codNave=2;
+		}
+		else
+			codNave=0;
+		
 		String clase;
 		int vida = N.getVida();
 		float posX = N.getPosX();
@@ -107,11 +119,11 @@ public class DAONave
 		List<Armamento> armas;
 		String insert;
 		
-		if(codNave == 1)
+		if(N instanceof Destructor)
 		{
 			clase = "Fletcher";
 		}
-		else if (codNave == 2)
+		else if (N instanceof Submarino)
 		{
 			clase = "UBoat";
 		}
@@ -136,7 +148,7 @@ public class DAONave
 			pstmt.close();
 			con.close();
 			
-			if(codNave == 1)
+			if(N instanceof Destructor)
 			{
 				armas = ((Destructor) N).getArmas();
 				for(Armamento arm: armas)
@@ -144,7 +156,7 @@ public class DAONave
 					this.daoA.insBack(arm);
 				}
 			}
-			else if (codNave == 2)
+			else if (N instanceof Submarino)
 			{
 				armas = ((Submarino) N).getArmas();
 				for(Armamento arm: armas)
@@ -209,13 +221,13 @@ public class DAONave
 				else if (rs.getInt("codNave") == 1)
 				{
 					Destructor de = new Destructor(codP,rs.getFloat("posX"),rs.getFloat("posY"));
-					de.setArmas(this.daoA.listarArmas(codP, rs.getInt("codNave")));
+					de.setArmas(codP, this.daoA.listarArmas(codP, rs.getInt("codNave")));
 					naves.add(de);
 				}
 				else
 				{
 					Submarino su = new Submarino(codP,rs.getFloat("posX"),rs.getFloat("posY"));
-					su.setArmas(this.daoA.listarArmas(codP, rs.getInt("codNave")));
+					su.setArmas(codP, this.daoA.listarArmas(codP, rs.getInt("codNave")));
 					naves.add(su);
 				}
 			}
@@ -230,5 +242,95 @@ public class DAONave
 		
 		
 		return naves;
+	}
+	
+	public void updateNave(int codP, nave N, int indice)
+	{
+		int codNave;
+		
+		if(N instanceof Destructor)
+		{
+			codNave=1;
+		}
+		else if (N instanceof Submarino)
+		{
+			codNave=2;
+		}
+		else
+			codNave=0;
+
+		int vida = N.getVida();
+		float posX = N.getPosX();
+		float posY = N.getPosY();
+		List<Armamento> armas;
+		int codInterno = 0;		
+		
+		try 
+		{
+			Connection con = DriverManager.getConnection(url, user, password);
+			
+			if(N instanceof Carguero)
+			{
+				String select = "select codNaveInt from nave where codP = ? and codNave = ? limit 1;";
+				PreparedStatement pstmt = con.prepareStatement(select);		
+				pstmt.setInt(1, codP);
+				pstmt.setInt(2, codNave);
+				ResultSet rs = pstmt.executeQuery();
+				if (rs.next()) 
+				{
+					codInterno = rs.getInt("codNaveInt");
+				}
+				
+				String update0 = "update nave set vida = ?, posX = ?, posY = ? where codP = ? and codNaveInt = ?;";
+				PreparedStatement pstmt1 = con.prepareStatement(update0);
+				
+				pstmt1.setInt(1, vida);
+				pstmt1.setDouble(2, posX);
+				pstmt1.setDouble(3, posY);
+				pstmt1.setInt(4, codP);
+				pstmt1.setFloat(5, codInterno+indice);
+				
+				pstmt1.executeUpdate();
+				pstmt1.close();
+				
+			}
+			else
+			{
+				String update = "update nave set vida = ?, posX = ?, posY = ? where codP = ? and codNave = ?;";
+				PreparedStatement pstmt = con.prepareStatement(update);
+				
+				pstmt.setInt(1, vida);
+				pstmt.setFloat(2, posX);
+				pstmt.setFloat(3, posY);
+				pstmt.setInt(4, codP);
+				pstmt.setInt(5, codNave);
+				
+				pstmt.executeUpdate();
+				pstmt.close();
+			}
+			
+			con.close();
+			
+			if(N instanceof Destructor)
+			{
+				armas = ((Destructor) N).getArmas();
+				for(Armamento arm: armas)
+				{
+					this.daoA.updateArmamento(codP, arm);
+				}
+			}
+			else if (N instanceof Submarino)
+			{
+				armas = ((Submarino) N).getArmas();
+				for(Armamento arm: armas)
+				{
+					this.daoA.updateArmamento(codP, arm);
+				}
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

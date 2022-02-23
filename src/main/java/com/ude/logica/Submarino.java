@@ -1,6 +1,9 @@
 package com.ude.logica;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.ude.visualObjects.VONave;
 
 public class Submarino extends nave
 {
@@ -35,8 +38,28 @@ public class Submarino extends nave
 		return armas;
 	}
 
-	public void setArmas(List<Armamento> armas) {
-		this.armas = armas;
+	public void setArmas(int codP, List<Armamento> armas) {
+		List<Armamento> arm = new ArrayList<>();
+		Armamento arma;
+		for(Armamento ar: armas)
+		{
+			switch(ar.getNombre())
+			{
+				case "cañonSub":
+					arma = new Armamento (codP, this.codNave, 0, ar.getMunicion());
+					arm.add(arma);
+					break;
+				case "torpedo":
+					arma = new Armamento (codP, this.codNave, 3, ar.getMunicion());
+					arm.add(arma);
+					break;
+				default:
+					break;
+			}
+			
+		}
+		
+		this.armas = arm;
 	}
 	
 }

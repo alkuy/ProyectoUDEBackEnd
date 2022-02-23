@@ -51,4 +51,11 @@ public class nave
 		return 3;
 	}
 
+	@Override
+	public String toString() {
+		return "nave [codP=" + codP + ", vida=" + vida + ", posX=" + posX + ", posY=" + posY + "]";
+	}
+	
+	
+
 }

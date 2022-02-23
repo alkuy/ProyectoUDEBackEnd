@@ -9,34 +9,31 @@ public class Armamento {
 	private String desc;
 	private int municion;
 	
-	public Armamento (int codP, int codNave,int tipo) {
+	public Armamento (int codP, int codNave,int tipo, int municion) {
 		this.codP = codP;
 		this.codNave = codNave;
+		this.municion = municion;
 		switch(tipo)
 		{
 			case 0:
 				this.nombre = "cañonSub";
 				this.calibre = "105mm";
 				this.desc = "Cañones de cubierta automaticos";
-				this.municion = 16;
 				break;
 			case 1:
 				this.nombre = "cañonDes";
 				this.calibre = "127mm";
 				this.desc = "Cañones de cubierta automaticos";
-				this.municion = 30;
 				break;
 			case 2:
 				this.nombre = "carga";
 				this.calibre = "S/N";
 				this.desc = "Cargas de profundidad para destruir submarinos";
-				this.municion = 10;
 				break;
 			case 3:
 				this.nombre = "torpedo";
 				this.calibre = "S/N";
 				this.desc = "Torpedos submarinos para objetivos maritimos";
-				this.municion = 10;
 				break;
 			default:
 				break;

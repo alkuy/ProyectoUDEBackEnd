@@ -1,5 +1,6 @@
 package com.ude.logica;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Destructor extends nave
@@ -37,8 +38,28 @@ public class Destructor extends nave
 		return armas;
 	}
 
-	public void setArmas(List<Armamento> armas) {
-		this.armas = armas;
+	public void setArmas(int codP, List<Armamento> armas) {
+		List<Armamento> arm = new ArrayList<>();
+		Armamento arma;
+		for(Armamento ar: armas)
+		{
+			switch(ar.getNombre())
+			{
+				case "cañonDes":
+					arma = new Armamento (codP, this.codNave, 1, ar.getMunicion());
+					arm.add(arma);
+					break;
+				case "carga":
+					arma = new Armamento (codP, this.codNave, 2, ar.getMunicion());
+					arm.add(arma);
+					break;
+				default:
+					break;
+			}
+			
+		}
+		
+		this.armas = arm;
 	}
 	
 }

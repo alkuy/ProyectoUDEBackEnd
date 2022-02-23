@@ -165,13 +165,13 @@ public class DAOArmamentos {
 			{
 				String nombre = rs.getString("nombre");
 				if(nombre.equals("cañonSub"))
-					arm = new Armamento(codP,codNave,0);
+					arm = new Armamento(codP,codNave,0, 16);
 				else if(nombre.equals("cañonDes"))
-					arm = new Armamento(codP,codNave,1);
+					arm = new Armamento(codP,codNave,1, 30);
 				else if(nombre.equals("carga"))
-					arm = new Armamento(codP,codNave,2);
+					arm = new Armamento(codP,codNave,2, 10);
 				else
-					arm = new Armamento(codP,codNave,3);
+					arm = new Armamento(codP,codNave,3, 10);
 				armas.add(arm);
 			}
 			
@@ -182,5 +182,27 @@ public class DAOArmamentos {
 		}	
 		
 		return armas;		
+	}
+	
+	public void updateArmamento(int codP, Armamento arm)
+	{
+		try 
+		{
+			Connection con = DriverManager.getConnection(url, user, password);
+			String update = "update armamento set municion = ? where codPartida = ? and nombre = ?;";
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(update);
+			System.out.println(arm.getMunicion());
+			pstmt.setInt(1, arm.getMunicion());
+			pstmt.setInt(2, codP);
+			pstmt.setString(3, arm.getNombre());
+			
+			pstmt.executeUpdate();
+			
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}			
 	}
 }

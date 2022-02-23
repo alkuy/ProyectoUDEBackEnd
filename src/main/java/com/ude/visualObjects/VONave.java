@@ -1,6 +1,8 @@
-package com.ude.logica;
+package com.ude.visualObjects;
 
 import java.util.List;
+
+import com.ude.logica.Armamento;
 
 public class VONave 
 {
@@ -21,11 +23,9 @@ public class VONave
 		this.codNave = codNave;
 		this.clase = clase;
 		if (armas != null) {
-			//System.out.println("not null");
 			this.armas = armas;
 		}
-		//else
-			//System.out.println("null");
+
 			
 	}
 

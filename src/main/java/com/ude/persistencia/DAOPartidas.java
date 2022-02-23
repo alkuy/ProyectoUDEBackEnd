@@ -14,8 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import com.ude.logica.Armamento;
 import com.ude.logica.Carguero;
 import com.ude.logica.Partida;
-import com.ude.logica.VONave;
 import com.ude.logica.nave;
+import com.ude.visualObjects.VONave;
+import com.ude.visualObjects.VOPartida;
 
 public class DAOPartidas {
 	
@@ -68,7 +69,7 @@ public class DAOPartidas {
 		try 
 		{
 			Connection con = DriverManager.getConnection(url, user, password);
-			String select = "Select * from partidas order by codigo;";
+			String select = "Select * from partida order by codP;";
 			Statement stmt = con.createStatement();			
 			ResultSet rs = stmt.executeQuery(select);
 			
@@ -92,7 +93,6 @@ public class DAOPartidas {
 	
 	public void insBack (Partida P) 
 	{
-		List<nave> naves;
 		try {
 			Connection con = DriverManager.getConnection(url, user, password);
 			String insert = "insert into partida values (?,?,?,?);";
@@ -107,14 +107,12 @@ public class DAOPartidas {
 			pstmt.close();
 			con.close();
 			
-			naves = P.getNaves();
-			for(nave nav: naves)
+			
+			for(nave nav: P.getNaves())
 			{
 				this.daoN.insBack(nav);
 			}
-			
-			
-			
+
 		}
 		catch (SQLException e)
 		{
@@ -127,14 +125,13 @@ public class DAOPartidas {
 		Partida P = null;
 		try {
 			Connection con = DriverManager.getConnection(url, user, password);
-			String insert = "slect * from partida where codP = ?);";
+			String insert = "select * from partida where codP = ?;";
 			PreparedStatement pstmt = con.prepareStatement(insert);
 			pstmt.setInt(1, codP);
 			ResultSet rs = pstmt.executeQuery();
-			List<VONave> voN = new ArrayList<>();
 			if (rs.next()) 
 			{
-				P = new Partida(codP,voN);
+				P = new Partida(codP);
 				P.setGanador(rs.getString("ganador"));
 				P.setFecha(rs.getDate("fecha"));
 				P.setEstado(rs.getString("estado"));
@@ -161,10 +158,9 @@ public class DAOPartidas {
 			String select = "Select * from partida order by codP;";
 			Statement stmt = con.createStatement();			
 			ResultSet rs = stmt.executeQuery(select);
-			List<VONave> voN = new ArrayList<>();
 			while (rs.next()) 
 			{
-				Partida P = new Partida(rs.getInt("codP"),voN);
+				Partida P = new Partida(rs.getInt("codP"));
 				P.setGanador(rs.getString("ganador"));
 				P.setFecha(rs.getDate("fecha"));
 				P.setEstado(rs.getString("estado"));
@@ -183,6 +179,62 @@ public class DAOPartidas {
 		
 		
 		return partidas;
+	}
+	
+	public void updatePartida(VOPartida P)
+	{
+		try {
+			Connection con = DriverManager.getConnection(url, user, password);
+			String update = "update partida set estado = ?;";
+			PreparedStatement pstmt = con.prepareStatement(update);
+			
+			pstmt.setString(1, "pausada");
+			
+			pstmt.executeUpdate();
+			pstmt.close();
+			con.close();
+			
+			int indice = 0;
+			for(nave nav: P.getNaves())
+			{
+				if(nav instanceof Carguero)
+				{
+					this.daoN.updateNave(P.getCodPartida(), nav, indice);
+					indice++;
+				}
+				else
+				{
+					this.daoN.updateNave(P.getCodPartida(), nav, 0);
+				}
+					
+			}
+
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}	
+	}
+
+	public void finalizarPartida(int codP, String ganador) {
+		try 
+		{
+			Connection con = DriverManager.getConnection(url, user, password);
+			String update = "update partida set estado = ?, ganador = ? where codP = ?;";
+			PreparedStatement pstmt = con.prepareStatement(update);
+			
+			pstmt.setString(1, "finalizada");
+			pstmt.setString(2, ganador);
+			pstmt.setInt(3, codP);
+			pstmt.executeUpdate();
+			pstmt.close();
+			con.close();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}	
+		
 	}
 
 }
