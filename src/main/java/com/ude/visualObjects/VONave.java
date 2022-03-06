@@ -3,6 +3,7 @@ package com.ude.visualObjects;
 import java.util.List;
 
 import com.ude.logica.Armamento;
+import com.ude.persistencia.DAOPartidas;
 
 public class VONave 
 {
@@ -14,19 +15,27 @@ public class VONave
 	private String clase;
 	private List<Armamento> armas;
 	
-	public VONave (int codP, float posX, float posY, int codNave, String clase, List<Armamento> armas)
+	public VONave (int codP, int vida,  float posX, float posY, int codNave, String clase, List<Armamento> armas) throws ClassNotFoundException
 	{
 		this.codP = codP;
-		this.vida = 100;
+		this.vida = vida;
 		this.posX = posX;
 		this.posY = posY;
 		this.codNave = codNave;
 		this.clase = clase;
+		
+		DAOPartidas daoP = new DAOPartidas();
+		int largo = daoP.Largo();
+		int codPartida = largo+1;
+		
 		if (armas != null) {
 			this.armas = armas;
+			for (Armamento arm: armas)
+			{
+				arm.setCod(codPartida);
+			}
 		}
-
-			
+		
 	}
 
 	public int getCodP() {

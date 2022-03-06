@@ -200,7 +200,7 @@ public class DAONave
 		return cargRest;
 	}
 	
-	public List<nave> listarNaves(int codP)
+	public List<nave> listarNaves(int codP) throws ClassNotFoundException
 	{
 		List<nave> naves = new ArrayList<>();
 		
@@ -216,17 +216,20 @@ public class DAONave
 				if(rs.getInt("codNave") == 0)
 				{
 					Carguero ca = new Carguero(codP,rs.getFloat("posX"),rs.getFloat("posY"));
+					ca.setVida(rs.getInt("vida"));
 					naves.add(ca);
 				}
 				else if (rs.getInt("codNave") == 1)
 				{
 					Destructor de = new Destructor(codP,rs.getFloat("posX"),rs.getFloat("posY"));
+					de.setVida(rs.getInt("vida"));
 					de.setArmas(codP, this.daoA.listarArmas(codP, rs.getInt("codNave")));
 					naves.add(de);
 				}
 				else
 				{
 					Submarino su = new Submarino(codP,rs.getFloat("posX"),rs.getFloat("posY"));
+					su.setVida(rs.getInt("vida"));
 					su.setArmas(codP, this.daoA.listarArmas(codP, rs.getInt("codNave")));
 					naves.add(su);
 				}
@@ -258,7 +261,7 @@ public class DAONave
 		}
 		else
 			codNave=0;
-
+		//System.out.print("Vida: "+N.getVida()+" codP: "+codP+"\n");
 		int vida = N.getVida();
 		float posX = N.getPosX();
 		float posY = N.getPosY();

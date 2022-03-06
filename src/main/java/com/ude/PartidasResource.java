@@ -32,10 +32,12 @@ public class PartidasResource
 		return daoP.listarPartidas();
 	}
 	
-	@GetMapping("getPartidas/{codP}")
-	public Partida getPartida(@PathVariable("codP") int codP) throws ClassNotFoundException 
+	@GetMapping("cargarPartida")
+	public Partida getCargarPartida() throws ClassNotFoundException 
 	{
-		DAOPartidas daoP = new DAOPartidas();	
+		DAOPartidas daoP = new DAOPartidas();
+		int largo = daoP.Largo();
+		int codP = largo;
 		return daoP.kesimo(codP);
 	}
 	
@@ -75,7 +77,7 @@ public class PartidasResource
 		}
 
 		Partida pa = new Partida(codP);
-		pa.setNaves(naves);
+		pa.setNaves(P.getNaves());
 		daoP.insBack(pa);
 		System.out.println("la partida fue creada con exito");
 	}
@@ -85,13 +87,15 @@ public class PartidasResource
 		
 		DAOPartidas daoP = new DAOPartidas();
 		daoP.updatePartida(P);
+		System.out.println("Partida guardada con exito");
 		return "Partida guardada con exito";
 	}
 	
 	@PostMapping("finalizarPartida")
 	public String finalizarPartida(@RequestBody VOFin F) throws ClassNotFoundException {
 		DAOPartidas daoP = new DAOPartidas();
-		daoP.finalizarPartida(F.getCodP(), F.getGanador());
+		int codP = daoP.Largo();
+		daoP.finalizarPartida(codP, F.getGanador());
 		return "Partida finalizada";
 	}
 	

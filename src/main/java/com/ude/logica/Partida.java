@@ -61,7 +61,7 @@ public class Partida
 		{
 			for(nave nav: N)
 			{
-				System.out.println(nav);
+				//System.out.println(nav);
 				this.naves.add(nav);
 			}
 		}

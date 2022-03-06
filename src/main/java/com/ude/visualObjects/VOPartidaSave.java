@@ -18,7 +18,7 @@ public class VOPartidaSave {
 	private String ganador;
 	private List<nave> naves;
 	
-	public VOPartidaSave(int codP, List<VONave> naves) {
+	public VOPartidaSave(int codP, List<VONave> naves) throws ClassNotFoundException {
 		this.codP = codP;
 		long now = System.currentTimeMillis();
 		this.fecha = new Date(now);

@@ -165,13 +165,13 @@ public class DAOArmamentos {
 			{
 				String nombre = rs.getString("nombre");
 				if(nombre.equals("cañonSub"))
-					arm = new Armamento(codP,codNave,0, 16);
+					arm = new Armamento(codP,codNave,0, rs.getInt("municion"));
 				else if(nombre.equals("cañonDes"))
-					arm = new Armamento(codP,codNave,1, 30);
+					arm = new Armamento(codP,codNave,1, rs.getInt("municion"));
 				else if(nombre.equals("carga"))
-					arm = new Armamento(codP,codNave,2, 10);
+					arm = new Armamento(codP,codNave,2, rs.getInt("municion"));
 				else
-					arm = new Armamento(codP,codNave,3, 10);
+					arm = new Armamento(codP,codNave,3, rs.getInt("municion"));
 				armas.add(arm);
 			}
 			
@@ -192,7 +192,7 @@ public class DAOArmamentos {
 			String update = "update armamento set municion = ? where codPartida = ? and nombre = ?;";
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(update);
-			System.out.println(arm.getMunicion());
+			//System.out.println(arm.getMunicion());
 			pstmt.setInt(1, arm.getMunicion());
 			pstmt.setInt(2, codP);
 			pstmt.setString(3, arm.getNombre());

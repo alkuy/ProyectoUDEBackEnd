@@ -120,7 +120,7 @@ public class DAOPartidas {
 		}
 	}
 	
-	public Partida kesimo(int codP)
+	public Partida kesimo(int codP) throws ClassNotFoundException
 	{
 		Partida P = null;
 		try {
@@ -149,7 +149,7 @@ public class DAOPartidas {
 		return P;
 	}
 	
-	public List<Partida> listarPartidas(){
+	public List<Partida> listarPartidas() throws ClassNotFoundException{
 		List<Partida> partidas = new ArrayList<>();
 		
 		try 
@@ -183,13 +183,14 @@ public class DAOPartidas {
 	
 	public void updatePartida(VOPartida P)
 	{
+		int codPartida = this.Largo();
 		try {
 			Connection con = DriverManager.getConnection(url, user, password);
-			String update = "update partida set estado = ?;";
+			String update = "update partida set estado = ? where codP = ?;";
 			PreparedStatement pstmt = con.prepareStatement(update);
 			
 			pstmt.setString(1, "pausada");
-			
+			pstmt.setInt(2, codPartida);
 			pstmt.executeUpdate();
 			pstmt.close();
 			con.close();
@@ -199,12 +200,12 @@ public class DAOPartidas {
 			{
 				if(nav instanceof Carguero)
 				{
-					this.daoN.updateNave(P.getCodPartida(), nav, indice);
+					this.daoN.updateNave(codPartida, nav, indice);
 					indice++;
 				}
 				else
 				{
-					this.daoN.updateNave(P.getCodPartida(), nav, 0);
+					this.daoN.updateNave(codPartida, nav, 0);
 				}
 					
 			}

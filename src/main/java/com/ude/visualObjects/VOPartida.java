@@ -8,6 +8,7 @@ import com.ude.logica.Carguero;
 import com.ude.logica.Destructor;
 import com.ude.logica.Submarino;
 import com.ude.logica.nave;
+import com.ude.persistencia.DAOPartidas;
 
 public class VOPartida {
 	
@@ -17,12 +18,17 @@ public class VOPartida {
 	private String ganador;
 	private List<nave> naves;
 	
-	public VOPartida(int codP, List<VONave> naves) {
-		this.codP = codP;
+	public VOPartida(int codP, List<VONave> naves) throws ClassNotFoundException {
+		
 		long now = System.currentTimeMillis();
 		this.fecha = new Date(now);
 		this.estado = "Iniciada";
 		this.ganador = "S/N";
+		
+		DAOPartidas daoP = new DAOPartidas();
+		int largo = daoP.Largo();
+		int codPartida = largo+1;
+		this.codP = codPartida;
 		
 		this.naves = new ArrayList<>();
 		if(!naves.isEmpty())
@@ -32,18 +38,18 @@ public class VOPartida {
 				switch(nav.getcodNave())
 				{
 					case 0:
-						Carguero ca = new Carguero(nav.getCodP(),nav.getPosX(),nav.getPosY());
+						Carguero ca = new Carguero(this.codP,nav.getPosX(),nav.getPosY());
 						ca.setVida(nav.getVida());
 						this.naves.add(ca);
 						break;
 					case 1:
-						Destructor de = new Destructor(nav.getCodP(),nav.getPosX(),nav.getPosY());
+						Destructor de = new Destructor(this.codP,nav.getPosX(),nav.getPosY());
 						de.setArmas(codP, nav.getArmas());
 						de.setVida(nav.getVida());
 						this.naves.add(de);
 						break;
 					case 2:
-						Submarino su = new Submarino(nav.getCodP(),nav.getPosX(),nav.getPosY());
+						Submarino su = new Submarino(this.codP,nav.getPosX(),nav.getPosY());
 						su.setArmas(codP, nav.getArmas());
 						su.setVida(nav.getVida());
 						this.naves.add(su);

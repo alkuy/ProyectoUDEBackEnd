@@ -3,6 +3,7 @@ package com.ude.logica;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ude.persistencia.DAOPartidas;
 import com.ude.visualObjects.VONave;
 
 public class Submarino extends nave
@@ -38,7 +39,11 @@ public class Submarino extends nave
 		return armas;
 	}
 
-	public void setArmas(int codP, List<Armamento> armas) {
+	public void setArmas(int codP, List<Armamento> armas) throws ClassNotFoundException {
+		DAOPartidas daoP = new DAOPartidas();
+		int largo = daoP.Largo();
+		int codPartida = largo+1;
+		
 		List<Armamento> arm = new ArrayList<>();
 		Armamento arma;
 		for(Armamento ar: armas)
@@ -46,11 +51,11 @@ public class Submarino extends nave
 			switch(ar.getNombre())
 			{
 				case "cañonSub":
-					arma = new Armamento (codP, this.codNave, 0, ar.getMunicion());
+					arma = new Armamento (codPartida, this.codNave, 0, ar.getMunicion());
 					arm.add(arma);
 					break;
 				case "torpedo":
-					arma = new Armamento (codP, this.codNave, 3, ar.getMunicion());
+					arma = new Armamento (codPartida, this.codNave, 3, ar.getMunicion());
 					arm.add(arma);
 					break;
 				default:
